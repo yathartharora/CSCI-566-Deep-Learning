@@ -261,7 +261,7 @@ class dropout(object):
     def forward(self, feat, is_training=True, seed=None):
         if seed is not None:
             self.rng = np.random.RandomState(seed)
-        # kept = None
+        kept = None
         output = None
         #############################################################################
         # TODO: Implement the forward pass of Dropout.                              #
@@ -272,7 +272,7 @@ class dropout(object):
         # Store the results in the variable output provided above.                  #
         #############################################################################
         
-        if self.is_training:
+        if is_training:
             if self.keep_prob == 0:
                 kept = np.ones_like(feat)
                 output = feat
@@ -281,7 +281,7 @@ class dropout(object):
                 output = feat * kept / self.keep_prob
         else:
             output = feat
-            kept=None
+            # kept=None
         
         #############################################################################
         #                             END OF YOUR CODE                              #
@@ -307,12 +307,12 @@ class dropout(object):
                 dfeat = dprev
             else:
                 if self.kept is not None:  # Check if self.kept is not None
-                    dfeat = dprev * self.kept
+                    dfeat = dprev * self.kept / self.keep_prob
                 else:
                     dfeat = dprev  # If self.kept is None, don't apply dropout during backward pass
         else:
             dfeat = dprev
-        #############################################################################
+        ######################################################
         #                             END OF YOUR CODE                              #
         #############################################################################
         self.is_training = False

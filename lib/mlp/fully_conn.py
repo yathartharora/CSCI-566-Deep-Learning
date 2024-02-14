@@ -51,15 +51,6 @@ class SmallFullyConnectedNetwork(Module):
             ############# END ############
         )
 
-    # def forward(self, x):
-    #     scores = self.net.forward(x)
-    #     return scores
-    
-    # def backward(self, dout):
-    #     dx = self.net.backward(dout)
-    #     return dx
-
-
 
 class DropoutNet(Module):
     def __init__(self, keep_prob=0, dtype=np.float32, seed=None):
