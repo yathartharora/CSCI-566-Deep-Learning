@@ -3,7 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-
+import math
 
 """ Super Class """
 
@@ -66,7 +66,15 @@ class SGDM(Optimizer):
         #############################################################################
         # TODO: Implement the SGD + Momentum                                        #
         #############################################################################
-        pass
+
+        for param_name, param in layer.params.items():
+            if param_name not in self.velocity:
+                self.velocity[param_name] = np.zeros_like(param)
+            
+            g = layer.grads[param_name]
+            self.velocity[param_name] = self.momentum * self.velocity[param_name] - self.lr * g
+
+            layer.params[param_name] += self.velocity[param_name]
         #############################################################################
         #                             END OF YOUR CODE                              #
         #############################################################################
@@ -86,7 +94,15 @@ class RMSProp(Optimizer):
         #############################################################################
         # TODO: Implement the RMSProp                                               #
         #############################################################################
-        pass
+        for param_name, param in layer.params.items():
+            if param_name not in self.cache:
+                self.cache[param_name] = np.zeros_like(param)
+            
+            g = layer.grads[param_name]
+            self.cache[param_name] = self.decay*self.cache[param_name] + (1-self.decay)*(g**2)
+
+            layer.params[param_name] -= (self.lr*g)/np.sqrt(self.cache[param_name]+self.eps)
+
         #############################################################################
         #                             END OF YOUR CODE                              #
         #############################################################################
@@ -108,7 +124,21 @@ class Adam(Optimizer):
         #############################################################################
         # TODO: Implement the Adam                                                  #
         #############################################################################
-        pass
+        self.t+=1
+
+        for param_name,param in layer.params.items():
+            if param_name not in self.mt:
+                self.mt[param_name] = np.zeros_like(param)
+                self.vt[param_name]=np.zeros_like(param)
+            
+            g = layer.grads[param_name]
+            self.mt[param_name] = self.beta1*self.mt[param_name] + (1-self.beta1)*g
+            self.vt[param_name] = self.beta2*self.vt[param_name] + (1-self.beta2)*(g**2)
+
+            mt_cap = self.mt[param_name]/(1-(self.beta1**self.t))
+            vt_cap = self.vt[param_name]/(1-(self.beta2**self.t))
+
+            layer.params[param_name] -= (self.lr*mt_cap)/np.sqrt(vt_cap+self.eps)
         #############################################################################
         #                             END OF YOUR CODE                              #
         #############################################################################

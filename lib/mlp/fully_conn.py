@@ -83,9 +83,9 @@ class TinyNet(Module):
         self.net = sequential(
             #### TODO: Add the layers ####
             flatten(),
-            fc(),
+            fc(3072,500,5e-2,name="fc1"),
             leaky_relu(),
-            fc()
+            fc(500,10,5e-2,name="fc2")
             ############# END ############
         )
 

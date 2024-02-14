@@ -160,7 +160,15 @@ def train_net(
             # pass to the network, and make a step for the optimizer.                   #
             # Store the loss to loss_hist                                               #
             #############################################################################
-            pass
+            scores = model.forward(data_batch,True)
+            loss=loss_func.forward(scores,labels_batch)
+            
+            dLoss=loss_func.backward()
+            dX=model.backward(dLoss)
+
+            optimizer.step()
+
+            loss_hist.append(loss)
             #############################################################################
             #                             END OF YOUR CODE                              #
             #############################################################################
@@ -181,7 +189,8 @@ def train_net(
         # compute_acc method, store the results to train_acc and val_acc,           #
         # respectively                                                              #
         #############################################################################
-        pass
+        train_acc = compute_acc(model, data_train, labels_train)
+        val_acc = compute_acc(model, data_val, labels_val)
         #############################################################################
         #                             END OF YOUR CODE                              #
         #############################################################################
@@ -194,7 +203,9 @@ def train_net(
             # TODO: Save the optimal parameters to opt_params variable by name using    #
             # model.net.gather_params method                                            #
             #############################################################################
-            pass
+            if val_acc > opt_val_acc:
+                model.net.gather_params()
+                opt_params = model.net.params
             #############################################################################
             #                             END OF YOUR CODE                              #
             #############################################################################
