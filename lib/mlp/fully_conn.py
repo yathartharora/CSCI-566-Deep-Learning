@@ -34,7 +34,9 @@ class TestFCReLU(Module):
     def __init__(self, keep_prob=0, dtype=np.float32, seed=None):
         self.net = sequential(
             #### TODO: Add the layers ####
-            ...
+            flatten(name="flat"),
+            fc(15,5,name="fc"),
+            leaky_relu()
             ############# END ############
         )
 
@@ -43,9 +45,20 @@ class SmallFullyConnectedNetwork(Module):
     def __init__(self, keep_prob=0, dtype=np.float32, seed=None):
         self.net = sequential(
             #### TODO: Add the layers ####
-            ...
+            fc(input_dim=4, output_dim=30,init_scale=0.02,name="fc1"),
+            leaky_relu(name="leaky_relu1"),
+            fc(input_dim=30,output_dim=7,init_scale=0.02,name="fc2")
             ############# END ############
         )
+
+    # def forward(self, x):
+    #     scores = self.net.forward(x)
+    #     return scores
+    
+    # def backward(self, dout):
+    #     dx = self.net.backward(dout)
+    #     return dx
+
 
 
 class DropoutNet(Module):
@@ -69,7 +82,10 @@ class TinyNet(Module):
         """Some comments"""
         self.net = sequential(
             #### TODO: Add the layers ####
-            ...
+            flatten(),
+            fc(),
+            leaky_relu(),
+            fc()
             ############# END ############
         )
 
